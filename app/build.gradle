@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -9,6 +16,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -16,13 +25,59 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
+    def presentationDependencies = rootProject.ext.presentationDependencies
+    def testDependencies = rootProject.ext.presentationTestDependencies
+//    def developmentDependencies = rootProject.ext.developmentDependencies
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    implementation presentationDependencies.kotlin
+
+    implementation presentationDependencies.appCompat
+    implementation presentationDependencies.supportAnnotations
+
+    implementation presentationDependencies.dagger
+    kapt presentationDependencies.daggerCompiler
+    implementation presentationDependencies.daggerSupport
+
+    implementation presentationDependencies.butterKnife
+    kapt presentationDependencies.butterKnifeAnnotation
+
+    implementation presentationDependencies.rxJava
+    implementation presentationDependencies.rxAndroid
+    implementation presentationDependencies.rxBinding
+
+    implementation presentationDependencies.timber
+
+    implementation presentationDependencies.gson
+
+    implementation presentationDependencies.supportDesign
+    implementation presentationDependencies.cardView
+    implementation presentationDependencies.preference
+    implementation presentationDependencies.preferenceMaterial
+    implementation presentationDependencies.recyclerView
+    implementation presentationDependencies.constraintLayout
+
+    implementation presentationDependencies.liveData
+
+    implementation presentationDependencies.room
+    kapt presentationDependencies.roomCompile
+    implementation presentationDependencies.roomRxjava
+
+    testImplementation testDependencies.junit
+    testImplementation testDependencies.mockito
+    androidTestImplementation testDependencies.espresso
+
+//    implementation 'androidx.appcompat:appcompat:1.0.2'
+//    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+//    testImplementation 'junit:junit:4.12'
+//    androidTestImplementation 'androidx.test:runner:1.1.1'
+//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
