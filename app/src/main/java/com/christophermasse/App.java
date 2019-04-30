@@ -2,11 +2,17 @@ package com.christophermasse;
 
 import android.app.Application;
 
+import com.christophermasse.checklist.internal.component.AppComponent;
+import com.christophermasse.checklist.internal.component.DaggerAppComponent;
+import com.christophermasse.checklist.internal.module.RoomModule;
+
 import org.jetbrains.annotations.NotNull;
 
 import timber.log.Timber;
 
 public class App extends Application {
+
+    private static AppComponent sAppComponent;
 
     @Override
     public void onCreate() {
@@ -18,5 +24,19 @@ public class App extends Application {
                 return super.createStackElementTag(element) + ":" + element.getLineNumber();
             }
         });
+
+        initializeInjector();
     }
+
+
+    private void initializeInjector(){
+        sAppComponent = DaggerAppComponent.builder()
+                .roomModule(new RoomModule(this))
+                .build();
+    }
+
+    public static AppComponent getAppComponent() {
+        return sAppComponent;
+    }
+
 }
