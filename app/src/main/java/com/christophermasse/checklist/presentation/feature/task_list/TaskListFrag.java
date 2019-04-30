@@ -1,6 +1,7 @@
 package com.christophermasse.checklist.presentation.feature.task_list;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.christophermasse.checklist.data.repository.TaskRepo;
 import com.christophermasse.checklist.entities.Task;
 import com.christophermasse.checklist.internal.component.DaggerTaskComponent;
 import com.christophermasse.checklist.presentation.adapter.TaskAdapter;
+import com.christophermasse.checklist.presentation.feature.add_task.AddTaskActivity;
 import com.christophermasse.checklist.presentation.fragment.BaseFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -32,7 +34,12 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static android.app.Activity.RESULT_OK;
+import static com.christophermasse.checklist.presentation.feature.add_task.AddTaskActivity.EXTRA_TASK_TITLE;
+
 public class TaskListFrag extends BaseFragment {
+
+    public static final int ADD_TASK_REQUEST = 101;
 
     @BindView(R.id.recycler_view)
     RecyclerView rv;
@@ -45,6 +52,7 @@ public class TaskListFrag extends BaseFragment {
 
     @Inject
     TaskRepo mTaskRepo;
+    private RequestAddTaskListener mListener;
 
     public static TaskListFrag newInstance() {
         Bundle args = new Bundle();
@@ -60,6 +68,12 @@ public class TaskListFrag extends BaseFragment {
                 .appComponent(App.getAppComponent())
                 .build()
                 .inject(this);
+
+        if (getActivity() instanceof RequestAddTaskListener){
+            mListener = (RequestAddTaskListener) getActivity();
+        } else {
+            throw new ClassCastException("Parent activity must implement " + RequestAddTaskListener.class.getSimpleName());
+        }
     }
 
     @Nullable
@@ -76,9 +90,20 @@ public class TaskListFrag extends BaseFragment {
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(mTaskAdapter);
         fab.setOnClickListener(view1 -> {
+
+            Intent intent = new Intent(getActivity(), AddTaskActivity.class);
+            startActivityForResult(intent, ADD_TASK_REQUEST);
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Timber.d(requestCode + "." + resultCode);
+        if (requestCode == ADD_TASK_REQUEST && resultCode == RESULT_OK){
+            String title = data.getStringExtra(EXTRA_TASK_TITLE);
             Task task = new Task();
-            String name = "Some Random Task";
-            task.setName(name);
+            task.setName(title);
 
             Single<Long> single = mTaskRepo.insert(task)
                     .subscribeOn(Schedulers.from(App.getAppComponent().threadExecutor()))
@@ -94,7 +119,8 @@ public class TaskListFrag extends BaseFragment {
                     Timber.e(e);
                 }
             });
-        });
+
+        }
     }
 
     @Override
@@ -121,5 +147,10 @@ public class TaskListFrag extends BaseFragment {
             }
         });
 
+    }
+
+
+    public interface RequestAddTaskListener{
+        void onRequestAddTask();
     }
 }

@@ -22,7 +22,8 @@ ext {
     rxBindingVersion = '2.2.0' // 2019.03.31
 
     roomVersion = '2.1.0-alpha06' // 2019.03.31
-    archLifecycleVersion = '2.0.0-beta01' // 2019.03.31
+    archLifecycleVersion = '2.0.0' // 2019.03.31
+    liveDataRx = '1.1.1' // 2019.03.31
 
     //Testing
     jUnitVersion = '4.12' // 2019.03.31
@@ -68,7 +69,8 @@ ext {
             roomCompile:            "androidx.room:room-compiler:${roomVersion}",
             roomRxjava:             "androidx.room:room-rxjava2:${roomVersion}",
 
-            liveData: "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
+            liveData:       "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion",
+            liveDataRx:         "android.arch.lifecycle:reactivestreams:1.1.1"
     ]
 
     presentationTestDependencies = [

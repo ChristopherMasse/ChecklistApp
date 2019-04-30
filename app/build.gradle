@@ -66,6 +66,7 @@ dependencies {
     implementation presentationDependencies.constraintLayout
 
     implementation presentationDependencies.liveData
+    implementation presentationDependencies.liveDataRx
 
     implementation presentationDependencies.room
     kapt presentationDependencies.roomCompile
