@@ -24,11 +24,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskVh> {
 
     @Inject
     public TaskAdapter() {
-        mTaskList.add(new Task());
-        mTaskList.add(new Task());
-        mTaskList.add(new Task());
-        mTaskList.add(new Task());
-        mTaskList.add(new Task());
     }
 
     @NonNull
@@ -41,11 +36,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskVh> {
 
     @Override
     public void onBindViewHolder(@NonNull TaskVh holder, int position) {
-        holder.setText(String.valueOf(position));
+        Task task = mTaskList.get(position);
+        String text = task.getId() + " " + task.getName();
+        holder.setText(text);
     }
 
     @Override
     public int getItemCount() {
         return mTaskList.size();
+    }
+
+
+    public void setTaskList(List<Task> taskList) {
+        mTaskList = taskList;
+        notifyDataSetChanged();
     }
 }

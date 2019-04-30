@@ -1,6 +1,8 @@
 package com.christophermasse.checklist.internal.module;
 
 import com.christophermasse.App;
+import com.christophermasse.checklist.data.repository.TaskRepo;
+import com.christophermasse.checklist.data.repository.TaskRepository;
 import com.christophermasse.checklist.internal.theading.AndroidUiThread;
 import com.christophermasse.checklist.internal.theading.JobExecutor;
 import com.christophermasse.checklist.internal.theading.PostExecutionThread;
@@ -19,6 +21,13 @@ public class AppModule {
     public AppModule(App application) {
         this.application = application;
     }
+
+    @Provides
+    @Singleton
+    TaskRepo provideTaskRepo(TaskRepository repository){
+        return repository;
+    }
+
 
     @Provides
     @Singleton

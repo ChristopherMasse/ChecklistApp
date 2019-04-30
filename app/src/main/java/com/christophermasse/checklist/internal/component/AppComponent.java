@@ -1,6 +1,7 @@
 package com.christophermasse.checklist.internal.component;
 
 import com.christophermasse.checklist.data.database.TaskDatabase;
+import com.christophermasse.checklist.data.repository.TaskRepo;
 import com.christophermasse.checklist.internal.module.AppModule;
 import com.christophermasse.checklist.internal.module.RoomModule;
 import com.christophermasse.checklist.internal.theading.PostExecutionThread;
@@ -19,4 +20,6 @@ public interface AppComponent {
     ThreadExecutor threadExecutor();
 
     PostExecutionThread postExecutionThread();
+
+    TaskRepo taskRepo();
 }

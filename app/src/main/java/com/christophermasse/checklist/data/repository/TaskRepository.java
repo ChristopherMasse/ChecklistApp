@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 
 /**
@@ -26,9 +27,22 @@ public class TaskRepository implements TaskRepo{
     }
 
     @Override
+    public Single<Long> insert(Task task) {
+        return dao.insert(task);
+    }
+
+    @Override
+    public Single<Integer> update(Task task) {
+        return dao.update(task);
+    }
+
+    @Override
+    public Single<Integer> delete(Task task) {
+        return dao.delete(task);
+    }
+
+    @Override
     public Observable<List<Task>> getAllTasks() {
-
-
         return dao.getAllTasks();
     }
 }
