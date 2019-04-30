@@ -1,8 +1,15 @@
 package com.christophermasse.checklist.internal.module;
 
 import com.christophermasse.App;
+import com.christophermasse.checklist.internal.theading.AndroidUiThread;
+import com.christophermasse.checklist.internal.theading.JobExecutor;
+import com.christophermasse.checklist.internal.theading.PostExecutionThread;
+import com.christophermasse.checklist.internal.theading.ThreadExecutor;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
+import dagger.Provides;
 
 @Module
 public class AppModule {
@@ -11,5 +18,17 @@ public class AppModule {
 
     public AppModule(App application) {
         this.application = application;
+    }
+
+    @Provides
+    @Singleton
+    ThreadExecutor provideJobExecutor(JobExecutor jobExecutor){
+        return jobExecutor;
+    }
+
+    @Provides
+    @Singleton
+    PostExecutionThread providePostExecutionThread(AndroidUiThread androidUiThread) {
+        return androidUiThread;
     }
 }
