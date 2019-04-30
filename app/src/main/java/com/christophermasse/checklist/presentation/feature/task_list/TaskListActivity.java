@@ -14,6 +14,7 @@ public class TaskListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_frag);
+        createFrag();
     }
 
     private void createFrag(){

@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import com.christophermasse.checklist.R;
 import com.christophermasse.checklist.entities.Task;
+import com.christophermasse.checklist.internal.scope.PerFragment;
 import com.christophermasse.checklist.presentation.viewholder.TaskVh;
 
 import java.util.ArrayList;
@@ -16,13 +17,18 @@ import javax.inject.Inject;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
+@PerFragment
 public class TaskAdapter extends RecyclerView.Adapter<TaskVh> {
 
     private List<Task> mTaskList = new ArrayList<>();
 
     @Inject
     public TaskAdapter() {
+        mTaskList.add(new Task());
+        mTaskList.add(new Task());
+        mTaskList.add(new Task());
+        mTaskList.add(new Task());
+        mTaskList.add(new Task());
     }
 
     @NonNull
@@ -35,7 +41,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskVh> {
 
     @Override
     public void onBindViewHolder(@NonNull TaskVh holder, int position) {
-
+        holder.setText(String.valueOf(position));
     }
 
     @Override

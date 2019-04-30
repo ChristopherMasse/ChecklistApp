@@ -1,11 +1,14 @@
 package com.christophermasse.checklist.presentation.feature.task_list;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.christophermasse.App;
 import com.christophermasse.checklist.R;
+import com.christophermasse.checklist.internal.component.DaggerTaskComponent;
 import com.christophermasse.checklist.presentation.adapter.TaskAdapter;
 import com.christophermasse.checklist.presentation.fragment.BaseFragment;
 
@@ -32,6 +35,16 @@ public class TaskListFrag extends BaseFragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        DaggerTaskComponent.builder()
+                .appComponent(App.getAppComponent())
+                .build()
+                .inject(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,7 +57,6 @@ public class TaskListFrag extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        rv.setAdapter();
+        rv.setAdapter(mTaskAdapter);
     }
 }
