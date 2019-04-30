@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.christophermasse.checklist.MainActivity;
+import com.christophermasse.checklist.presentation.feature.task_list.TaskListActivity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,7 +31,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void openMedicineList() {
-        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+        Intent intent = new Intent(SplashActivity.this, TaskListActivity.class);
         startActivity(intent);
         finish();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

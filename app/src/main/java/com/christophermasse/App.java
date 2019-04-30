@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.christophermasse.checklist.internal.component.AppComponent;
 import com.christophermasse.checklist.internal.component.DaggerAppComponent;
+import com.christophermasse.checklist.internal.module.AppModule;
 import com.christophermasse.checklist.internal.module.RoomModule;
 
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,7 @@ public class App extends Application {
 
     private void initializeInjector(){
         sAppComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
                 .roomModule(new RoomModule(this))
                 .build();
     }
