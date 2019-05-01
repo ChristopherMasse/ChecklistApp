@@ -15,5 +15,7 @@ public interface TaskRepo {
 
     Single<Integer> delete(Task task);
 
+    Single<Integer> deleteAll();
+
     Observable<List<Task>> getAllTasks();
 }

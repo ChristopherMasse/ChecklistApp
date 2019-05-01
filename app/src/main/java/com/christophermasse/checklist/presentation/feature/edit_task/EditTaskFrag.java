@@ -3,6 +3,8 @@ package com.christophermasse.checklist.presentation.feature.edit_task;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,7 @@ import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -72,6 +75,7 @@ public class EditTaskFrag extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         showHomeButton(true);
         setToolbarTitle("Edit Task");
 
@@ -102,6 +106,33 @@ public class EditTaskFrag extends BaseFragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.options_edit_task, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+            case R.id.delete:
+                String message = "Are you sure you want to delete this task?";
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete Task")
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.yes,
+                                (dialogInterface, i) -> delete())
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
+                break;
+            default:
+        }
+        return true;
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -122,25 +153,30 @@ public class EditTaskFrag extends BaseFragment {
         cb.setChecked(isCompleted);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                getActivity().onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     @OnClick(R.id.update)
     void updateTask(){
-
         mTask.setName(et_title.getEditableText().toString().trim());
         mTask.setDescription(et_description.getEditableText().toString().trim());
         mTask.setCompleted(cb.isChecked());
 
         Single<Integer> single = mTaskRepo.update(mTask)
+                .subscribeOn(Schedulers.from(App.getAppComponent().threadExecutor()))
+                .observeOn(App.getAppComponent().postExecutionThread().getScheduler());
+        single.subscribe(new DisposableSingleObserver<Integer>() {
+            @Override
+            public void onSuccess(Integer integer) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Timber.e(e);
+            }
+        });
+    }
+
+    private void delete(){
+        Single<Integer> single = mTaskRepo.delete(mTask)
                 .subscribeOn(Schedulers.from(App.getAppComponent().threadExecutor()))
                 .observeOn(App.getAppComponent().postExecutionThread().getScheduler());
         single.subscribe(new DisposableSingleObserver<Integer>() {

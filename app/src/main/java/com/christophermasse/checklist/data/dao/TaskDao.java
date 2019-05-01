@@ -29,6 +29,4 @@ public interface TaskDao {
 
     @Query("SELECT * FROM task")
     Observable<List<Task>> getAllTasks();
-
-
 }

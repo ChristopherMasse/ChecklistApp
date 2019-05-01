@@ -42,6 +42,11 @@ public class TaskRepository implements TaskRepo{
     }
 
     @Override
+    public Single<Integer> deleteAll() {
+        return dao.deleteAll();
+    }
+
+    @Override
     public Observable<List<Task>> getAllTasks() {
         return dao.getAllTasks();
     }

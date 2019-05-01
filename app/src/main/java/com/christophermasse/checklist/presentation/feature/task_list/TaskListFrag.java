@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,6 +28,7 @@ import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -82,7 +86,34 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.options_task_list, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.delete_all:
+                String message = "Are you sure you want to delete all stored tasks?";
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete All Tasks")
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.yes,
+                                (dialogInterface, i) -> deleteAllTasks())
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
+                break;
+
+            default:
+        }
+        return true;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -161,6 +192,22 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
             }
         });
 
+    }
+    private void deleteAllTasks(){
+        Single<Integer> observable = mTaskRepo.deleteAll()
+                .subscribeOn(Schedulers.from(App.getAppComponent().threadExecutor()))
+                .observeOn(App.getAppComponent().postExecutionThread().getScheduler());
+        observable.subscribe(new DisposableSingleObserver<Integer>() {
+            @Override
+            public void onSuccess(Integer integer) {
+                showToastShort("Deleted " + integer + " rows");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Timber.e(e);
+            }
+        });
     }
 
     @Override

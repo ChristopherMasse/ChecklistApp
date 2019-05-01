@@ -12,6 +12,7 @@ import com.christophermasse.checklist.presentation.listener.FragmentOps;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import timber.log.Timber;
@@ -22,6 +23,8 @@ public class TaskListActivity extends BaseActivity implements FragmentOps {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_frag);
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
         createFrag();
     }
 
