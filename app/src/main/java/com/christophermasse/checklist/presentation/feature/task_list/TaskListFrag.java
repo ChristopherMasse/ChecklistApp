@@ -15,6 +15,7 @@ import com.christophermasse.checklist.internal.component.DaggerTaskComponent;
 import com.christophermasse.checklist.presentation.adapter.TaskAdapter;
 import com.christophermasse.checklist.presentation.feature.add_task.AddTaskActivity;
 import com.christophermasse.checklist.presentation.fragment.BaseFragment;
+import com.christophermasse.checklist.presentation.viewholder.TaskVh;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -37,7 +38,7 @@ import timber.log.Timber;
 import static android.app.Activity.RESULT_OK;
 import static com.christophermasse.checklist.presentation.feature.add_task.AddTaskActivity.EXTRA_TASK_TITLE;
 
-public class TaskListFrag extends BaseFragment {
+public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListener {
 
     public static final int ADD_TASK_REQUEST = 101;
 
@@ -47,11 +48,11 @@ public class TaskListFrag extends BaseFragment {
     @BindView(R.id.fab_add_task)
     FloatingActionButton fab;
 
-    @Inject
-    TaskAdapter mTaskAdapter;
+    private TaskAdapter mTaskAdapter;
 
     @Inject
     TaskRepo mTaskRepo;
+
     private RequestAddTaskListener mListener;
 
     public static TaskListFrag newInstance() {
@@ -87,6 +88,7 @@ public class TaskListFrag extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mTaskAdapter = new TaskAdapter(this);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(mTaskAdapter);
         fab.setOnClickListener(view1 -> {
@@ -147,6 +149,16 @@ public class TaskListFrag extends BaseFragment {
             }
         });
 
+    }
+
+    @Override
+    public void onItemClick(int pos) {
+        showToastShort("clickeed");
+    }
+
+    @Override
+    public void onItemCheck(int pos, boolean isChecked) {
+        showToastShort("isChecked = " + isChecked);
     }
 
 

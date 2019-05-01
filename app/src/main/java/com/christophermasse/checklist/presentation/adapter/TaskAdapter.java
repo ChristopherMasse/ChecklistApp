@@ -6,24 +6,23 @@ import android.view.ViewGroup;
 
 import com.christophermasse.checklist.R;
 import com.christophermasse.checklist.entities.Task;
-import com.christophermasse.checklist.internal.scope.PerFragment;
 import com.christophermasse.checklist.presentation.viewholder.TaskVh;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-@PerFragment
 public class TaskAdapter extends RecyclerView.Adapter<TaskVh> {
 
     private List<Task> mTaskList = new ArrayList<>();
 
-    @Inject
-    public TaskAdapter() {
+
+    private TaskVh.TaskEventListener mTaskEventListener;
+
+    public TaskAdapter(TaskVh.TaskEventListener listener) {
+        this.mTaskEventListener = listener;
     }
 
     @NonNull
@@ -31,7 +30,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskVh> {
     public TaskVh onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View vh = inflater.inflate(R.layout.vh_task, parent, false);
-        return new TaskVh(vh);
+        return new TaskVh(vh, mTaskEventListener);
     }
 
     @Override
