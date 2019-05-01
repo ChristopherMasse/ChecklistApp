@@ -51,6 +51,7 @@
             android:gravity="top"
             android:hint="@string/hint_details"
             android:inputType="textMultiLine"
+            android:imeOptions="actionDone"
             android:lines="6"
             android:maxLength="300"
             android:maxLines="6"
