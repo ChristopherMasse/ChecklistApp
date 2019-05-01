@@ -3,6 +3,7 @@ package com.christophermasse.checklist.presentation.feature.add_task;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.christophermasse.checklist.R;
 import com.christophermasse.checklist.entities.Task;
@@ -21,9 +22,21 @@ public class AddTaskActivity extends BaseActivity implements AddTaskFragment.Sub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_frag);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         setTitle("Add Task");
         createFrag();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

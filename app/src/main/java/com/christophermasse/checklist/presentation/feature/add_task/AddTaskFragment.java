@@ -31,9 +31,7 @@ public class AddTaskFragment extends BaseFragment {
     private SubmitTaskListener mSubmitTaskListener;
 
     public static AddTaskFragment newInstance() {
-        
         Bundle args = new Bundle();
-        
         AddTaskFragment fragment = new AddTaskFragment();
         fragment.setArguments(args);
         return fragment;
