@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import butterknife.Unbinder;
 import timber.log.Timber;
@@ -32,5 +34,17 @@ public abstract class BaseFragment extends Fragment {
 
     public void showToastShort(String message){
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    protected void setToolbarTitle(@Nullable String title){
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+        ActionBar bar = appCompatActivity.getSupportActionBar();
+        bar.setTitle(title);
+    }
+
+    protected void showHomeButton(boolean showButton){
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+        ActionBar bar = appCompatActivity.getSupportActionBar();
+        bar.setDisplayHomeAsUpEnabled(showButton);
     }
 }

@@ -15,6 +15,7 @@ import com.christophermasse.checklist.internal.component.DaggerTaskComponent;
 import com.christophermasse.checklist.presentation.adapter.TaskAdapter;
 import com.christophermasse.checklist.presentation.feature.add_task.AddTaskActivity;
 import com.christophermasse.checklist.presentation.fragment.BaseFragment;
+import com.christophermasse.checklist.presentation.listener.FragmentOps;
 import com.christophermasse.checklist.presentation.viewholder.TaskVh;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -36,6 +37,7 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
+import static com.christophermasse.checklist.presentation.feature.add_task.AddTaskActivity.EXTRA_TASK_DESC;
 import static com.christophermasse.checklist.presentation.feature.add_task.AddTaskActivity.EXTRA_TASK_TITLE;
 
 public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListener {
@@ -53,7 +55,7 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
     @Inject
     TaskRepo mTaskRepo;
 
-    private RequestAddTaskListener mListener;
+    private FragmentOps mFragmentOps;
 
     public static TaskListFrag newInstance() {
         Bundle args = new Bundle();
@@ -70,16 +72,22 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
                 .build()
                 .inject(this);
 
-        if (getActivity() instanceof RequestAddTaskListener){
-            mListener = (RequestAddTaskListener) getActivity();
+        if (getActivity() instanceof FragmentOps) {
+            mFragmentOps = (FragmentOps) getActivity();
         } else {
-            throw new ClassCastException("Parent activity must implement " + RequestAddTaskListener.class.getSimpleName());
+            throw new ClassCastException("Parent activity must implement " + FragmentOps.class.getSimpleName());
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setToolbarTitle("Tasks");
+        showHomeButton(false);
         View root = inflater.inflate(R.layout.frag_task_list, container, false);
         mUnbinder = ButterKnife.bind(this, root);
         return root;
@@ -102,10 +110,14 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Timber.d(requestCode + "." + resultCode);
-        if (requestCode == ADD_TASK_REQUEST && resultCode == RESULT_OK){
+        if (requestCode == ADD_TASK_REQUEST && resultCode == RESULT_OK) {
             String title = data.getStringExtra(EXTRA_TASK_TITLE);
+            String desc = data.getStringExtra(EXTRA_TASK_DESC);
+
             Task task = new Task();
+
             task.setName(title);
+            task.setDescription(desc);
 
             Single<Long> single = mTaskRepo.insert(task)
                     .subscribeOn(Schedulers.from(App.getAppComponent().threadExecutor()))
@@ -153,16 +165,14 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
 
     @Override
     public void onItemClick(int pos) {
-        showToastShort("clickeed");
+        Task task = mTaskAdapter.getTaskAtPosition(pos);
+        mFragmentOps.requestEditTask(task);
     }
 
     @Override
     public void onItemCheck(int pos, boolean isChecked) {
-        showToastShort("isChecked = " + isChecked);
+        Task task = mTaskAdapter.getTaskAtPosition(pos);
+        //TODO: mark completed in repo
     }
 
-
-    public interface RequestAddTaskListener{
-        void onRequestAddTask();
-    }
 }

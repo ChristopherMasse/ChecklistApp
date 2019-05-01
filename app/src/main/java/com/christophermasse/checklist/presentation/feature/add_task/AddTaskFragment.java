@@ -64,11 +64,11 @@ public class AddTaskFragment extends BaseFragment {
 
             Task task = new Task();
             task.setName(title);
+            task.setDescription(desc);
 
             mSubmitTaskListener.onTaskSubmitted(task);
         });
     }
-
 
     public interface SubmitTaskListener{
         void onTaskSubmitted(Task task);

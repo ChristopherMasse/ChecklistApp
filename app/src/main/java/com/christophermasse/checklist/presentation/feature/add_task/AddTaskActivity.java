@@ -17,6 +17,8 @@ public class AddTaskActivity extends BaseActivity implements AddTaskFragment.Sub
 
     public static final String EXTRA_TASK_TITLE = "extra_task_title";
 
+    public static final String EXTRA_TASK_DESC = "extra_task_desc";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,7 @@ public class AddTaskActivity extends BaseActivity implements AddTaskFragment.Sub
     public void onTaskSubmitted(Task task) {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_TASK_TITLE, task.getName());
+        intent.putExtra(EXTRA_TASK_DESC, task.getDescription());
         setResult(RESULT_OK, intent);
         finish();
     }

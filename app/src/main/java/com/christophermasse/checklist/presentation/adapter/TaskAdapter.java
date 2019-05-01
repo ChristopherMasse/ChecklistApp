@@ -38,6 +38,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskVh> {
         Task task = mTaskList.get(position);
         String text = task.getId() + " " + task.getName();
         holder.setText(text);
+        holder.setCompleted(task.isCompleted());
     }
 
     @Override
@@ -49,5 +50,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskVh> {
     public void setTaskList(List<Task> taskList) {
         mTaskList = taskList;
         notifyDataSetChanged();
+    }
+
+    public Task getTaskAtPosition(int pos) throws IndexOutOfBoundsException{
+        return mTaskList.get(pos);
     }
 }

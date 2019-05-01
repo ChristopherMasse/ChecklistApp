@@ -26,14 +26,16 @@ public class TaskVh extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
         this.mListener = listener;
         itemView.setOnClickListener(view -> mListener.onItemClick(getAdapterPosition()));
-        cb_task.setOnCheckedChangeListener((compoundButton, b) -> {
-            mListener.onItemCheck(getAdapterPosition(), b);
-        });
+        cb_task.setOnClickListener(View -> mListener.onItemCheck(getAdapterPosition(), cb_task.isChecked()));
 
     }
 
     public void setText(String taskDetails){
         tv_task.setText(taskDetails);
+    }
+
+    public void setCompleted(boolean isCompleted){
+        cb_task.setChecked(isCompleted);
     }
 
     public interface TaskEventListener {
