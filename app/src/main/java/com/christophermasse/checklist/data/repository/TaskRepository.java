@@ -8,8 +8,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import timber.log.Timber;
 
 
 /**
@@ -28,26 +30,32 @@ public class TaskRepository implements TaskRepo{
 
     @Override
     public Single<Long> insert(Task task) {
+        Timber.d("insert()");
         return dao.insert(task);
     }
 
     @Override
     public Single<Integer> update(Task task) {
+        Timber.d("update()");
         return dao.update(task);
     }
 
     @Override
     public Single<Integer> delete(Task task) {
+        Timber.d("delete()");
         return dao.delete(task);
     }
 
     @Override
     public Single<Integer> deleteAll() {
+        Timber.d("deleteAll()");
         return dao.deleteAll();
     }
 
     @Override
-    public Observable<List<Task>> getAllTasks() {
+    public Flowable<List<Task>> getAllTasks() {
+        Timber.d("getAllTasks()");
         return dao.getAllTasks();
     }
+
 }

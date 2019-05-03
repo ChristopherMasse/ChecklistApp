@@ -33,11 +33,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
@@ -60,6 +61,9 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
     TaskRepo mTaskRepo;
 
     private FragmentOps mFragmentOps;
+
+    private CompositeDisposable disposables = new CompositeDisposable();
+
 
     public static TaskListFrag newInstance() {
         Bundle args = new Bundle();
@@ -114,11 +118,16 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
         return true;
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Timber.d("onCreateView()");
+
         setToolbarTitle("Tasks");
         showHomeButton(false);
+
         View root = inflater.inflate(R.layout.frag_task_list, container, false);
         mUnbinder = ButterKnife.bind(this, root);
         return root;
@@ -127,14 +136,33 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Timber.d("onViewCreated()");
         mTaskAdapter = new TaskAdapter(this);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(mTaskAdapter);
         fab.setOnClickListener(view1 -> {
-
             Intent intent = new Intent(getActivity(), AddTaskActivity.class);
             startActivityForResult(intent, ADD_TASK_REQUEST);
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Timber.d("onResume()");
+
+//        observeObservables();
+//        observeObservablesWithDispose();
+        subscribeFlowable();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (disposables != null && !disposables.isDisposed()){
+            disposables.dispose();
+            Timber.d("Disposing observer");
+        }
     }
 
     @Override
@@ -167,14 +195,12 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
 
         }
     }
+    private void subscribeFlowable() {
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Observable<List<Task>> observable = mTaskRepo.getAllTasks()
-                .subscribeOn(Schedulers.from(App.getAppComponent().threadExecutor()))
-                .observeOn(App.getAppComponent().postExecutionThread().getScheduler());
-        observable.subscribe(new DisposableObserver<List<Task>>() {
+        Flowable<List<Task>> flowable = mTaskRepo.getAllTasks();
+
+        disposables.add(flowable.subscribeWith(new DisposableSubscriber<List<Task>>() {
+
             @Override
             public void onNext(List<Task> tasks) {
                 mTaskAdapter.setTaskList(tasks);
@@ -190,9 +216,9 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
             public void onComplete() {
 
             }
-        });
-
+        }));
     }
+
     private void deleteAllTasks(){
         Single<Integer> observable = mTaskRepo.deleteAll()
                 .subscribeOn(Schedulers.from(App.getAppComponent().threadExecutor()))

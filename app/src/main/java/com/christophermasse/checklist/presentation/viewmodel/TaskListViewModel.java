@@ -17,5 +17,5 @@ public class TaskListViewModel extends ViewModel {
         mRepo = repo;
     }
 
-    private LiveData<List<Task>> data = LiveDataReactiveStreams.fromPublisher(mRepo.getAllTasks().toFlowable(null));
+//    private LiveData<List<Task>> data = LiveDataReactiveStreams.fromPublisher(mRepo.getAllTasks());
 }

@@ -9,7 +9,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 @Dao
@@ -28,5 +28,6 @@ public interface TaskDao {
     Single<Integer> deleteAll();
 
     @Query("SELECT * FROM task")
-    Observable<List<Task>> getAllTasks();
+    Flowable<List<Task>> getAllTasks();
+
 }
