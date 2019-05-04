@@ -1,5 +1,6 @@
 package com.christophermasse.checklist.presentation.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import timber.log.Timber;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskVh> {
 
@@ -35,6 +37,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskVh> {
 
     @Override
     public void onBindViewHolder(@NonNull TaskVh holder, int position) {
+        Timber.d("Binding item at position " + position);
         Task task = mTaskList.get(position);
         String text = task.getId() + " " + task.getName();
         holder.setText(text);
