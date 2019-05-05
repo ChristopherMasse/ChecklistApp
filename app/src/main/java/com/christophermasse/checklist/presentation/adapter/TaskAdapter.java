@@ -51,6 +51,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskVh> {
 
 
     public void setTaskList(List<Task> taskList) {
+        Timber.d("settingTaskList");
         mTaskList = taskList;
         notifyDataSetChanged();
     }

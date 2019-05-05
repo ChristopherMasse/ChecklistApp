@@ -20,6 +20,8 @@ import com.christophermasse.checklist.presentation.feature.add_task.AddTaskActiv
 import com.christophermasse.checklist.presentation.fragment.BaseFragment;
 import com.christophermasse.checklist.presentation.listener.FragmentOps;
 import com.christophermasse.checklist.presentation.viewholder.TaskVh;
+import com.christophermasse.checklist.presentation.viewmodel.TaskViewModel;
+import com.christophermasse.checklist.presentation.viewmodel.TaskViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -29,6 +31,7 @@ import javax.inject.Inject;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -57,6 +60,8 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
     @Inject
     TaskRepo mTaskRepo;
 
+    private TaskViewModel mTaskViewModel;
+
     private TaskAdapter mTaskAdapter;
 
     private FragmentOps mFragmentOps;
@@ -70,6 +75,8 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
         fragment.setArguments(args);
         return fragment;
     }
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -89,7 +96,16 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Timber.d("onCreate()");
         setHasOptionsMenu(true);
+
+        TaskViewModelFactory factory = new TaskViewModelFactory(mTaskRepo);
+        mTaskViewModel =   ViewModelProviders.of(this, factory).get(TaskViewModel.class);
+        mTaskViewModel.getTaskList().observe(this, tasks -> {
+            mTaskAdapter.setTaskList(tasks);
+            Timber.d("setting tasks from livedata");
+        });
     }
 
     @Override
@@ -127,6 +143,7 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
         setToolbarTitle("Tasks");
         showHomeButton(false);
 
+
         View root = inflater.inflate(R.layout.frag_task_list, container, false);
         mUnbinder = ButterKnife.bind(this, root);
         return root;
@@ -150,7 +167,7 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
         super.onResume();
         Timber.d("onResume()");
 
-        subscribeTasks();
+//        subscribeTasks();
     }
 
     @Override
