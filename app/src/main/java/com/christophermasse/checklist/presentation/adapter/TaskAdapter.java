@@ -1,6 +1,5 @@
 package com.christophermasse.checklist.presentation.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,23 +8,42 @@ import com.christophermasse.checklist.R;
 import com.christophermasse.checklist.entities.Task;
 import com.christophermasse.checklist.presentation.viewholder.TaskVh;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import timber.log.Timber;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskVh> {
-
-    private List<Task> mTaskList = new ArrayList<>();
-
+public class TaskAdapter extends ListAdapter<Task, TaskVh> {
 
     private TaskVh.TaskEventListener mTaskEventListener;
 
     public TaskAdapter(TaskVh.TaskEventListener listener) {
+        super(DIFF_CALLBACK);
         this.mTaskEventListener = listener;
     }
+
+    private static final DiffUtil.ItemCallback<Task> DIFF_CALLBACK = new DiffUtil.ItemCallback<Task>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
+            return oldItem.getId() == newItem.getId() &&
+                    oldItem.getName().equals(newItem.getName()) &&
+                    oldItem.getDescription().equals(newItem.getDescription()) &&
+                    oldItem.isCompleted() == newItem.isCompleted();
+        }
+    };
+
+    public Task getTaskAtPosition(int pos){
+        return getItem(pos);
+    }
+
+//    public TaskAdapter(TaskVh.TaskEventListener listener) {
+//        this.mTaskEventListener = listener;
+//    }
 
     @NonNull
     @Override
@@ -38,25 +56,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskVh> {
     @Override
     public void onBindViewHolder(@NonNull TaskVh holder, int position) {
         Timber.d("Binding item at position " + position);
-        Task task = mTaskList.get(position);
+        Task task = getTaskAtPosition(position);
         String text = task.getId() + " " + task.getName();
         holder.setText(text);
         holder.setCompleted(task.isCompleted());
-    }
-
-    @Override
-    public int getItemCount() {
-        return mTaskList.size();
-    }
-
-
-    public void setTaskList(List<Task> taskList) {
-        Timber.d("settingTaskList");
-        mTaskList = taskList;
-        notifyDataSetChanged();
-    }
-
-    public Task getTaskAtPosition(int pos) throws IndexOutOfBoundsException{
-        return mTaskList.get(pos);
     }
 }

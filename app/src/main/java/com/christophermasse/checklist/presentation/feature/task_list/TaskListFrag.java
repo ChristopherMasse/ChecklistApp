@@ -99,12 +99,11 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
 
         Timber.d("onCreate()");
         setHasOptionsMenu(true);
-
+        mTaskAdapter = new TaskAdapter(this);
         TaskViewModelFactory factory = new TaskViewModelFactory(mTaskRepo);
-        mTaskViewModel =   ViewModelProviders.of(this, factory).get(TaskViewModel.class);
+        mTaskViewModel =  ViewModelProviders.of(this, factory).get(TaskViewModel.class);
         mTaskViewModel.getTaskList().observe(this, tasks -> {
-            mTaskAdapter.setTaskList(tasks);
-            Timber.d("setting tasks from livedata");
+            mTaskAdapter.submitList(tasks);
         });
     }
 
@@ -153,7 +152,6 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Timber.d("onViewCreated()");
-        mTaskAdapter = new TaskAdapter(this);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(mTaskAdapter);
         fab.setOnClickListener(view1 -> {
@@ -217,7 +215,7 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
                         .subscribeWith(new DisposableSubscriber<List<Task>>() {
             @Override
             public void onNext(List<Task> tasks) {
-                mTaskAdapter.setTaskList(tasks);
+//                mTaskAdapter.setTaskList(tasks);
                 Timber.d("getAllTasks() onNext()");
             }
 
