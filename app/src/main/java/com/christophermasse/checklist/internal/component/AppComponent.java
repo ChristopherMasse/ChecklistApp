@@ -15,8 +15,6 @@ import dagger.Component;
 @Component(modules = {AppModule.class, RoomModule.class})
 public interface AppComponent {
 
-    TaskDatabase taskDatabase();
-
     ThreadExecutor threadExecutor();
 
     PostExecutionThread postExecutionThread();

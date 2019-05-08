@@ -14,6 +14,7 @@ import com.christophermasse.App;
 import com.christophermasse.checklist.R;
 import com.christophermasse.checklist.data.repository.TaskRepo;
 import com.christophermasse.checklist.entities.Task;
+import com.christophermasse.checklist.interactor.AddTask;
 import com.christophermasse.checklist.internal.component.DaggerTaskComponent;
 import com.christophermasse.checklist.presentation.adapter.TaskAdapter;
 import com.christophermasse.checklist.presentation.feature.add_task.AddTaskActivity;
@@ -60,6 +61,12 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
     @Inject
     TaskRepo mTaskRepo;
 
+    @Inject
+    AddTask mAddTask;
+
+    @Inject
+    TaskViewModelFactory mFactory;
+
     private TaskViewModel mTaskViewModel;
 
     private TaskAdapter mTaskAdapter;
@@ -67,6 +74,7 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
     private FragmentOps mFragmentOps;
 
     private CompositeDisposable disposables = new CompositeDisposable();
+
 
 
     public static TaskListFrag newInstance() {
@@ -100,8 +108,7 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
         Timber.d("onCreate()");
         setHasOptionsMenu(true);
         mTaskAdapter = new TaskAdapter(this);
-        TaskViewModelFactory factory = new TaskViewModelFactory(mTaskRepo);
-        mTaskViewModel =  ViewModelProviders.of(this, factory).get(TaskViewModel.class);
+        mTaskViewModel =  ViewModelProviders.of(this, mFactory).get(TaskViewModel.class);
         mTaskViewModel.getTaskList().observe(this, tasks -> {
             mTaskAdapter.submitList(tasks);
         });
@@ -190,10 +197,24 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
             task.setName(title);
             task.setDescription(desc);
 
-            Single<Long> single = mTaskRepo.insert(task)
-                    .subscribeOn(Schedulers.from(App.getAppComponent().threadExecutor()))
-                    .observeOn(App.getAppComponent().postExecutionThread().getScheduler());
-            single.subscribe(new DisposableSingleObserver<Long>() {
+            //TODO: usecase
+//            Single<Long> single = mTaskRepo.insert(task)
+//                    .subscribeOn(Schedulers.from(App.getAppComponent().threadExecutor()))
+//                    .observeOn(App.getAppComponent().postExecutionThread().getScheduler());
+//            single.subscribe(new DisposableSingleObserver<Long>() {
+//                @Override
+//                public void onSuccess(Long aLong) {
+//                    showToastShort("Added item " + aLong);
+//                }
+//
+//                @Override
+//                public void onError(Throwable e) {
+//                    Timber.e(e);
+//                }
+//            });
+
+
+            mAddTask.execute(task).subscribeWith(new DisposableSingleObserver<Long>() {
                 @Override
                 public void onSuccess(Long aLong) {
                     showToastShort("Added item " + aLong);
