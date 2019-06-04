@@ -69,8 +69,8 @@ ext {
             roomCompile:            "androidx.room:room-compiler:${roomVersion}",
             roomRxjava:             "androidx.room:room-rxjava2:${roomVersion}",
 
-            liveData:       "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion",
-            liveDataRx:         "android.arch.lifecycle:reactivestreams:1.1.1"
+            liveData:               "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion",
+            liveDataRx:             "android.arch.lifecycle:reactivestreams:1.1.1"
     ]
 
     presentationTestDependencies = [

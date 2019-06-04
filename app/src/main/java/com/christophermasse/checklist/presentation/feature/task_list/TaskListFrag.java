@@ -106,12 +106,21 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
         super.onCreate(savedInstanceState);
 
         Timber.d("onCreate()");
+
         setHasOptionsMenu(true);
+
         mTaskAdapter = new TaskAdapter(this);
+
         mTaskViewModel =  ViewModelProviders.of(this, mFactory).get(TaskViewModel.class);
-        mTaskViewModel.getTaskList().observe(this, tasks -> {
+        mTaskViewModel.doStuff();
+        showToastShort(String.valueOf(mTaskViewModel.randomInt));
+        mTaskViewModel.getTasks().observe(this, tasks -> {
             mTaskAdapter.submitList(tasks);
+            Timber.d("tasks has changed!");
         });
+
+
+//        mTaskViewModel.taskList().observe(this, tasks -> mTaskAdapter.submitList(tasks));
     }
 
     @Override
@@ -148,7 +157,6 @@ public class TaskListFrag extends BaseFragment implements TaskVh.TaskEventListen
 
         setToolbarTitle("Tasks");
         showHomeButton(false);
-
 
         View root = inflater.inflate(R.layout.frag_task_list, container, false);
         mUnbinder = ButterKnife.bind(this, root);
