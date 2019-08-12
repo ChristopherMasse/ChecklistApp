@@ -5,14 +5,12 @@ import com.christophermasse.checklist.entities.Task;
 import com.christophermasse.checklist.internal.theading.PostExecutionThread;
 import com.christophermasse.checklist.internal.theading.ThreadExecutor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
 public class GetAllTasks {
@@ -43,14 +41,5 @@ public class GetAllTasks {
                 .subscribeOn(Schedulers.from(mThreadExecutor))
                 .observeOn(mPostExecutionThread.getScheduler());
     }
-
-//    public Observable<List<Task>> executeAlt(){
-//        List<Task> task = new ArrayList<>();
-//        mTaskRepo.getAllTasks();
-//        return Observable.just(task)
-//                .subscribeOn(Schedulers.from(mThreadExecutor))
-//                .observeOn(mPostExecutionThread.getScheduler());
-//    }
-
 
 }

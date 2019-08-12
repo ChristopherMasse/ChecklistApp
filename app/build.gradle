@@ -23,6 +23,8 @@ android {
 
         debug {
             minifyEnabled false
+            applicationIdSuffix = ".debug"
+            resValue "string", "app_label", "Checklist.d"
         }
         release {
             minifyEnabled false
@@ -36,9 +38,11 @@ android {
         mock {
             dimension "default"
             applicationIdSuffix = ".mock"
+            resValue "string", "app_label", "Checklist.m"
         }
         prod {
             dimension "default"
+            resValue "string", "app_label", "Checklist"
         }
     }
 
@@ -58,7 +62,6 @@ android {
         androidTest {
             java.srcDir sharedTestDir
         }
-        debug { res.srcDirs = ['src/debug/res', 'src/debug/res/'] }
     }
 
     // Remove mock release
