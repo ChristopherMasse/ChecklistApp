@@ -1,27 +1,19 @@
 package com.christophermasse.checklist.interactor;
 
 import com.christophermasse.checklist.data.repository.TaskRepo;
-import com.christophermasse.checklist.entities.Task;
 import com.christophermasse.checklist.internal.theading.PostExecutionThread;
 import com.christophermasse.checklist.internal.theading.ThreadExecutor;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.Flowable;
 import io.reactivex.schedulers.TestScheduler;
-import timber.log.Timber;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.verify;
-import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 

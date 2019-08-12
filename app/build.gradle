@@ -29,6 +29,19 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+//    sourceSets { main { java.srcDirs = ['src/main/java', 'src/sharedTest/java'] } }
+    sourceSets {
+        main { java.srcDirs = ['src/main/java'] }
+
+        String sharedTestDir = 'src/sharedTest/java'
+        test {
+            java.srcDir sharedTestDir
+        }
+        androidTest {
+            java.srcDir sharedTestDir
+        }
+    }
+
 }
 
 dependencies {
