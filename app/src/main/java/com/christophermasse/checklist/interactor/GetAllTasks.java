@@ -31,7 +31,7 @@ public class GetAllTasks {
     }
 
 
-    public Flowable<List<Task>> buildUseCase(){
+    Flowable<List<Task>> buildUseCase(){
         return mTaskRepo.getAllTasks();
     }
 

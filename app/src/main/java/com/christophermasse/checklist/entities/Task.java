@@ -49,4 +49,14 @@ public class Task implements Serializable {
         isCompleted = completed;
     }
 
+
+    public Task() {
+    }
+
+    public Task(int id, String name, String description, boolean isCompleted) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.isCompleted = isCompleted;
+    }
 }
