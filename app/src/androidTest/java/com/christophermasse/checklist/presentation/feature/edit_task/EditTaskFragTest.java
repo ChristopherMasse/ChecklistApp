@@ -1,7 +1,5 @@
 package com.christophermasse.checklist.presentation.feature.edit_task;
 
-import com.christophermasse.checklist.presentation.activity.BaseActivity;
-import com.christophermasse.checklist.presentation.feature.add_task.AddTaskActivity;
 import com.christophermasse.checklist.presentation.feature.task_list.TaskListActivity;
 
 import org.junit.Assert;
@@ -20,10 +18,11 @@ public class EditTaskFragTest {
 
 
 
+
     @Test
     public void testFrag(){
-
         Assert.assertEquals(2, 2);
+
     }
 
 }
