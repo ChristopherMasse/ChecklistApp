@@ -2,6 +2,7 @@ package com.christophermasse.checklist.internal.component;
 
 import com.christophermasse.checklist.data.database.TaskDatabase;
 import com.christophermasse.checklist.data.repository.TaskRepo;
+import com.christophermasse.checklist.internal.RepoModule;
 import com.christophermasse.checklist.internal.module.AppModule;
 import com.christophermasse.checklist.internal.module.RoomModule;
 import com.christophermasse.checklist.internal.theading.PostExecutionThread;
@@ -12,7 +13,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {AppModule.class, RoomModule.class})
+@Component(modules = {AppModule.class, RoomModule.class, RepoModule.class})
 public interface AppComponent {
 
     ThreadExecutor threadExecutor();

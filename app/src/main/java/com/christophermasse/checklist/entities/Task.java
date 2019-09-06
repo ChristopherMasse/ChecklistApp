@@ -2,6 +2,7 @@ package com.christophermasse.checklist.entities;
 
 import java.io.Serializable;
 
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -59,4 +60,5 @@ public class Task implements Serializable {
         this.description = description;
         this.isCompleted = isCompleted;
     }
+
 }
